@@ -1,0 +1,81 @@
+<%include ../partials/header.ejs%>
+<div class="container">
+	
+	<form action="/posts/<%=post.id%>?_method=PUT" method="POST"  id="form" enctype=multipart/form-data>
+	  <div class="form-group row">
+	    <label for="a" class="col-sm-2 col-form-label">Title</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="a" placeholder="title" name="title" value="<%=post.title%>">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="b" class="col-sm-2 col-form-label">Price</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="b" placeholder="price" name="price" value="<%=post.price%>">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="c" class="col-sm-2 col-form-label">location</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="c" placeholder="location" name="location" value="<%=post.location%>">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="d" class="col-sm-2 col-form-label">lat</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="d" placeholder="lat" name="lat" value="<%=post.lat%>">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="e" class="col-sm-2 col-form-label">lng</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="e" placeholder="lng" name="lng" value="<%=post.lng%>">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="f" class="col-sm-2 col-form-label">Description</label>
+	    <div class="col-sm-10">
+	     <textarea class="form-control" placeholder="Description" id="f" name="description"><%=post.description%></textarea>
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="f" class="col-sm-2 col-form-label">images</label>
+		<input type="file" name="images" id="imageUpload" accept="images/*" multiple />
+	    </div>
+	  </div>
+		<div class="form-group row">
+			
+			<div class="col-sm-10">
+				<%post.images.forEach((image,index)=>{ %>
+					<img src="<%=image.url%>" alt="" width="100px" class="img-thumbnail img-fluid">
+					<label for="image<%=index%>">delete?</label>
+					<input type="checkbox" name="deleteCheckbox[]" id="image<%=index%>" class="imageDeleteCheckbox" value="<%=image.public_id%>">
+				<% })%>
+			</div> <!-- note deletecheck box is array -->
+			
+		</div>
+	  <div class="form-group row d-block">
+	    <div class="col-sm-10">
+	      <button class="btn btn-primary">submit</button>
+	    </div>
+	  </div>
+	</form>
+
+</div>
+
+
+<script>
+	let form=document.querySelector("#form");
+	form.addEventListener("submit",function(event){
+		let uploadImage=document.querySelector("#imageUpload").files.length;
+		let checkedImage=document.querySelectorAll(".imageDeleteCheckbox:checked").length;
+		let totalImage=document.querySelectorAll(".imageDeleteCheckbox").length
+		if(((totalImage-checkedImage) +uploadImage)>4){
+			event.preventDefault();
+			alert("images cann't be more than 4 ....")
+		}
+	})
+
+</script>
+
+<%include ../partials/footer.ejs%>

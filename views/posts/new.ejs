@@ -1,0 +1,59 @@
+<%include ../partials/header.ejs%>
+<div class="container">
+	
+	<form action="/posts" method="POST" enctype="multipart/form-data">
+	  <div class="form-group row">
+	    <label for="a" class="col-sm-2 col-form-label">Title</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="a" placeholder="title" name="title">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="b" class="col-sm-2 col-form-label">Price</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="b" placeholder="price" name="price">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="g" class="col-sm-2 col-form-label">Images</label>
+	    <div class="col-sm-10">
+	      <input type="file" id="g" placeholder="max 4 imgs." name="images" accept="images/*" multiple />
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="c" class="col-sm-2 col-form-label">location</label>
+	    <div class="col-sm-10">
+	      <input type="text" class="form-control" id="c" placeholder="location" name="location">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="d" class="col-sm-2 col-form-label">lat</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="d" placeholder="lat" name="lat">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="e" class="col-sm-2 col-form-label">lng</label>
+	    <div class="col-sm-10">
+	      <input type="number" class="form-control" id="e" placeholder="lng" name="lng">
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="f" class="col-sm-2 col-form-label">Description</label>
+	    <div class="col-sm-10">
+	     <textarea class="form-control" placeholder="Description" id="f" name="description"></textarea>
+	    </div>
+	  </div>
+
+
+	  
+	  <div class="form-group row">
+	    <div class="col-sm-10">
+	      <button type="submit" class="btn btn-primary">submit</button>
+	    </div>
+	  </div>
+	</form>
+
+</div>
+
+<%include ../partials/footer.ejs%>

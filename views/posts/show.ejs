@@ -1,0 +1,21 @@
+<%include ../partials/header.ejs%>
+
+<h1><%=post.title%></h1>
+<h3><%=post.price%></h3>
+<p><%=post.description%></p>
+<p><%=post.location%></p>
+<p><%=post.lat%></p>
+<p><%=post.lng%></p>
+<%post.images.forEach(image=>{ %>
+<img src="<%=image.url%>" alt="" width="200px;">
+<%} )%>
+
+<img src="" alt="">
+
+<a href="/posts/<%=post.id%>/edit" class="btn btn-primary">Edit</a>
+<form action="/posts/<%=post.id%>?_method=DELETE" class="d-inline" method="POST">
+		<button class="btn btn-outline-danger">Delete post</button>
+
+
+</form>
+<%include ../partials/footer.ejs%>
