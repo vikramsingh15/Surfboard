@@ -38,16 +38,18 @@ module.exports={
 		req.body.coordinates=response.body.features[0].geometry.coordinates;
 
 		let posts=await Posts.create(req.body);
+		req.session.success="Post created successfully!! "
 		res.redirect("/posts/"+posts.id);
 	},
 
 	async postsShow(req,res,next){
 		post = await Posts.findById(req.params.id);
-		res.render("posts/show.ejs",{post});
+		res.render("posts/show.ejs",{post,title:post.title});
 	},
 
 	async postsEdit(req,res,next){
 			post=await Posts.findById(req.params.id);
+
 			res.render("posts/edit.ejs",{post});
 	},
 

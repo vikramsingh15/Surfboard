@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const engine=require("ejs-mate");
 const bodyParser=require("body-parser");
 const logger = require('morgan');
 const passport=require("passport");
@@ -20,10 +21,12 @@ const app = express();
 
 /*database connect with mongoose*/
 
-mongoose.connect("mongodb://localhost/surfBoard-mapbox", { useNewUrlParser: true } );
+mongoose.connect("mongodb://localhost/surfBoard", { useNewUrlParser: true } );
 
 // view engine setup
 mongoose.set('useFindAndModify', false);
+// use ejs-locals for all ejs templates:// use ejs-locals for all ejs templates:
+app.engine("ejs",engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -50,6 +53,19 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
+app.use((req,res,next)=>{
+  res.locals.title="Surfboard $";
+  res.locals.currentUser=req.user;
+
+  res.locals.success=req.session.success;
+  delete req.session.success;
+  
+  res.locals.error=req.session.error;
+  delete req.session.error;
+  next()
+})
+
+
 
 /*route setup*/
 app.use('/', indexRouter);
@@ -64,12 +80,15 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  /*res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};*/
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error.ejs');
+  /*res.status(err.status || 500);
+  res.render('error.ejs');*/
+  req.session.error=err.message;
+  console.log(err);
+  res.redirect("back");
 });
 
 module.exports = app;

@@ -1,4 +1,5 @@
-<%include ../partials/header.ejs%>
+<%layout("/partials/boilerplate")-%>
+
 <h1><%=post.title%></h1>
 <h3><%=post.price%></h3>
 <p><%=post.description%></p>
@@ -14,35 +15,8 @@
 <form action="/posts/<%=post.id%>?_method=DELETE" class="d-inline" method="POST">
 		<button class="btn btn-outline-danger">Delete post</button>
 </form>
-<script>
 
-mapboxgl.accessToken = "pk.eyJ1IjoidmlrcmFtLXNpbmdoIiwiYSI6ImNqeHFiOWhzdDBvMHYzYnBmNm15dzgybmsifQ.a3DkkpebAWLGrq-axr7thQ";
-
-var post=<%-JSON.stringify(post)%>
-var map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v10',
-  center:post.coordinates,
-  zoom: 4
-});
+<script>var post=<%-JSON.stringify(post)%></script>
+<script src="/javascripts/posts-show.js"></script>
 
 
-
-  // create a HTML element for each feature
-  var el = document.createElement('div');
-  el.className = 'marker';
-
-  // make a marker for each feature and add to the map
-  new mapboxgl.Marker(el)
-    .setLngLat(post.coordinates)
-    .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-        .setHTML('<h3>' + post.title + '</h3><p>' +post.location + '</p>'))
-
-    .addTo(map);
-
-
-
-</script>
-
-
-<%include ../partials/footer.ejs%>

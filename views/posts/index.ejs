@@ -1,3 +1,4 @@
+<%layout("/partials/boilerplate")-%>
 <%posts.forEach((post)=>{%>
 	<h1><%=post.title%></h1>
 	<a href="/posts/<%=post._id%>" class="btn btn-primary">more</a>
