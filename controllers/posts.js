@@ -1,5 +1,7 @@
 const Posts=require("../models/posts.js");
 const cloudinary=require("cloudinary").v2;
+const mbx = require('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbx({ accessToken: process.env.MAPBOX_TOKEN });
 cloudinary.config({
 	cloud_name:"dxkrfrwzc",
 	api_key:"665587122729671",
@@ -19,10 +21,22 @@ module.exports={
 
 	postsCreate:async (req,res,next)=>{
 		req.body.images=[];
+
+		/*cloudinary new image upload*/
 		for(const file of req.files){
 			let image=await cloudinary.uploader.upload(file.path);
 			req.body.images.push({url:image.secure_url,public_id:image.public_id});
 		}
+
+
+		/*geolocation sdk*/
+		response=await geocodingClient.forwardGeocode({
+		  query: req.body.location,
+		  limit: 1
+		}).send()
+
+		req.body.coordinates=response.body.features[0].geometry.coordinates;
+
 		let posts=await Posts.create(req.body);
 		res.redirect("/posts/"+posts.id);
 	},
@@ -39,6 +53,8 @@ module.exports={
 
 	async postsUpdate(req,res,next){
 		const posts=await Posts.findById(req.params.id);
+		
+		/*cloudinary image update*/
 		if(req.body.deleteCheckbox&&req.body.deleteCheckbox.length){
 			for(public_id of req.body.deleteCheckbox){
 				await cloudinary.uploader.destroy(public_id);
@@ -53,11 +69,19 @@ module.exports={
 			}
 		}
 
+		/*geolocation coordinates update*/
+		if(req.body.location!==posts.location){
+			response=await geocodingClient.forwardGeocode({
+			  query: req.body.location,
+			  limit: 1
+			}).send()
+
+			posts.coordinates=response.body.features[0].geometry.coordinates;
+			posts.location=req.body.location;	
+		}
+
 		posts.title=req.body.title;	
 		posts.price=req.body.price;	
-		posts.location=req.body.location;	
-		posts.lat=req.body.lat;	
-		posts.lng=req.body.lng;	
 		posts.description=req.body.description;	
 		posts.save();
 		res.redirect("/posts/"+posts.id);

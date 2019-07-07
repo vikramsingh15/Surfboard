@@ -20,7 +20,7 @@ const app = express();
 
 /*database connect with mongoose*/
 
-mongoose.connect("mongodb://localhost/surfBoard", { useNewUrlParser: true } );
+mongoose.connect("mongodb://localhost/surfBoard-mapbox", { useNewUrlParser: true } );
 
 // view engine setup
 mongoose.set('useFindAndModify', false);
