@@ -1,13 +1,26 @@
-<%layout("/partials/boilerplate")-%>
+<%layout("/partials/postsShowBoilerPlate.ejs")-%>
 
 <h1><%=post.title%></h1>
 <h3><%=post.price%></h3>
 <p><%=post.description%></p>
 <p><%=post.location%></p>
-<p><%=post.coordinates%></p>
-<%post.images.forEach(image=>{ %>
-	<img src="<%=image.url%>" alt="" width="200px;">
-<%} )%>
+<p>Average rating </p>
+
+<%for(i=0;i<5;i++){ %>
+	<%if(i<floorRating){%>
+		<i class="fas fa-star"></i>
+	<%}else if((post.avgRating-i)>0&&(post.avgRating-i)<1){%>
+		<i class="fas fa-star-half-alt"></i>
+	<%}else{%>
+			<i class="far fa-star"></i>
+	<%}%>
+<% }%>
+<div class="card">
+	<%post.images.forEach(image=>{ %>
+		<img src="<%=image.url%>" alt="" width="100px;" class="d-inline">
+	<%} )%>
+</div>
+
 
 <div id='map'></div>
 
@@ -16,7 +29,82 @@
 		<button class="btn btn-outline-danger">Delete post</button>
 </form>
 
-<script>var post=<%-JSON.stringify(post)%></script>
+<form action="/posts/<%=post.id%>/review" method="POST" class="mt-3">
+	<textarea name="body" class="form-control" col=40 placeholder="Enter review"></textarea>
+<!-- 	Rating -->
+
+<fieldset class="starability-basic">
+  <legend>Rating:</legend>
+  <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+  <input type="radio" id="rate1" name="rating" value="1" />
+  <label for="rate1" title="Terrible">1 star</label>
+  <input type="radio" id="rate2" name="rating" value="2" />
+  <label for="rate2" title="Not good">2 stars</label>
+  <input type="radio" id="rate3" name="rating" value="3" />
+  <label for="rate3" title="Average">3 stars</label>
+  <input type="radio" id="rate4" name="rating" value="4" />
+  <label for="rate4" title="Very good">4 stars</label>
+  <input type="radio" id="rate5" name="rating" value="5" />
+  <label for="rate5" title="Amazing">5 stars</label>
+</fieldset>
+	<button>submit</button>
+</form>
+
+<h1 class="mt-5">Reviews</h1>
+
+	<%  post.reviews.forEach((review)=>{%>
+	<div class="card d-flex mt-3 p-2">
+		<span class="align-self-end">	<%=review.author.username%></span>
+		<div class="align-content-start"><%=review.body%></div>
+		
+		
+		<hr>
+		Rating:
+		<%=review.rating%>
+		<hr>
+
+	<%if(review.author.equals(currentUser._id)){%>
+		<input type="button" value="Edit" class="btn btn-warning toggle">
+		
+		<form  action="/posts/<%=post.id%>/review/<%=review.id%>?_method=PUT" method="POST" class="mt-3 toggle-form">
+			<textarea name="body" class="form-control" col=40 placeholder="Enter review"><%=review.body%>
+			</textarea>
+
+			<fieldset class="starability-basic">
+			  <legend>Edit rating:</legend>
+
+
+			  <input type="radio" id="first-rate0" class="input-no-rate" name="rating" value="0" aria-label="No rating." />
+			  <input type="radio" id="first-rate1" name="rating" value="1" />
+			  <label for="first-rate1" title="Terrible">1 star</label>
+			  <input type="radio" id="first-rate2" name="rating" value="2" />
+			  <label for="first-rate2" title="Not good">2 stars</label>
+			  <input type="radio" id="first-rate3" name="rating" value="3" />
+			  <label for="first-rate3" title="Average">3 stars</label>
+			  <input type="radio" id="first-rate4" name="rating" value="4" />
+			  <label for="first-rate4" title="Very good">4 stars</label>
+			  <input type="radio" id="first-rate5" name="rating" value="5" />
+			  <label for="first-rate5" title="Amazing">5 stars</label>
+			</fieldset>
+			
+			<button>Edit</button>
+
+		</form>
+		
+		<script>
+			document.querySelector("#first-rate<%=review.rating%>").click()
+		</script>
+		<form action="/posts/<%=post.id%>/review/<%=review.id%>?_method=DELETE" method="POST">
+			<button class="btn btn-danger">Delete</button>
+		</form>
+	<%}%>
+		
+	</div>
+	<%  })%>
+
+
+<script>
+	var post=<%-JSON.stringify(post)%>
+	var mapboxToken="<%-mapboxToken%>"	
+</script>
 <script src="/javascripts/posts-show.js"></script>
-
-

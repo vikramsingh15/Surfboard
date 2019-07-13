@@ -11,7 +11,11 @@ const passportLocal=require("passport-local");
 const session=require("express-session");
 const User=require("./models/user.js");
 const mongoose=require("mongoose");
+
+
 const methodOverride=require("method-override");
+/*const seeds=require("./seeds.js");
+seeds()*/
 
            /*routes*/
 const indexRouter = require('./routes/index');
@@ -55,6 +59,16 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
   res.locals.title="Surfboard $";
+  req.user={
+          "_id" :"5d24d1efe9bde80dcc324145",
+          "username" : "vikram2"
+  }
+ /* req.user={
+          "_id" :"5d236deaeb45da1ca8f2ae01",
+          "username" : "vikram"
+  }
+ */ 
+
   res.locals.currentUser=req.user;
 
   res.locals.success=req.session.success;

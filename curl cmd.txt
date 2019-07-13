@@ -1,0 +1,1 @@
+ curl -d "username=vikram&password=wikings@15" -X POST http://localhost:3000/register

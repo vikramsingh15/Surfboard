@@ -1,12 +1,8 @@
-body {
-  margin: 0;
-  padding: 0;
-}
 
 #map {
  
-  width: 700px;
-  height: 500px;
+  width: 500px;
+  height: 300px;
 }
 .marker {
   background-image: url('/images/mapbox-icon.png');
@@ -24,4 +20,8 @@ body {
 .mapboxgl-popup-content {
   text-align: center;
   font-family: 'Open Sans', sans-serif;
+}
+
+.toggle-form{
+  display: none;
 }

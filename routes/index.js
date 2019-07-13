@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const passport=require("passport")
-const {postRegister,getLogout,postLogin} = require("../controllers/index.js");
+const {postRegister,getLogout,postLogin,landingPage} = require("../controllers/index.js");
 const {asyncErrorHandler}=require("../middleware/index.js");
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/', asyncErrorHandler(landingPage));
 
 /*GET (/register)*/
 router.get("/register",(req,res,next)=>{

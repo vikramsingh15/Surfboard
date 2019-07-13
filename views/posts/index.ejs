@@ -1,5 +1,46 @@
 <%layout("/partials/boilerplate")-%>
-<%posts.forEach((post)=>{%>
+
+
+<div id="map"></div>
+
+<%posts.docs.forEach((post)=>{%>
 	<h1><%=post.title%></h1>
 	<a href="/posts/<%=post._id%>" class="btn btn-primary">more</a>
 <% })%>
+
+
+<nav aria-label="..." class="mt-5 d-flex justify-content-center">
+  <ul class="pagination">
+  	<%if(posts.page-1){%>
+    <li class="page-item ">
+      <a class="page-link" href="/posts/?page=<%=posts.page-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <%}%>
+	<%for(let i=1 ; i<=posts.pages;i++){%>
+    	<li class="page-item" id="page_<%=i%>">
+    		<a class="page-link " href="/posts/?page=<%=i%>"><%=i%></a>
+    	</li>
+    <%}%>
+
+    <%if(posts.page<posts.pages){%>
+	    <li class="page-item">
+	      <a class="page-link" href="/posts/?page=<%=Number(posts.page)+1%>" tabindex="+1" aria-disabled="true">Next</a>
+	    </li>
+    <%}%>
+  </ul>
+</nav>
+
+
+<script>
+	const page=document.querySelector("#page_<%=posts.page%>");
+	page.classList.add("active")
+  mapboxgl.accessToken="<%-mapboxToken%>"
+  var posts={features:<%-JSON.stringify(posts.docs)%>}
+</script>
+
+  
+  
+
+
+  <script src="/javascripts/allPostsClusterMap.js"></script>
+

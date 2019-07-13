@@ -1,9 +1,18 @@
 const User=require("../models/user.js");
 const passport=require("passport");
+const Post =require("../models/posts.js");
+const mapboxToken=process.env.MAPBOX_TOKEN;
 
 
 
 module.exports={
+
+	async landingPage(req,res,next){
+		posts=await Post.find();
+		res.render("index.ejs",{posts,mapboxToken,title:"surfBoard - home"});
+	},
+
+
 	async postRegister(req,res,next){
 			const newUser= new User({
 				username:req.body.username,
