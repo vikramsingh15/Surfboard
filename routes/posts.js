@@ -11,30 +11,32 @@ const {
 	postsUpdate,
 	postsDelete	
 	}=require("../controllers/posts.js");
-const {asyncErrorHandler}=require("../middleware")
+const {asyncErrorHandler,isLoggedIn,isPostAuthor}=require("../middleware")
 
 
 /* GET posts Index (/posts)*/
 router.get('/', asyncErrorHandler(postsIndex));
 
 /* GET posts New (/posts/new) */
-router.get('/new',postsNew);
+router.get('/new',isLoggedIn,postsNew);
 
 /* POST posts Create (/posts) */
 
-router.post("/",upload.array("images",4),asyncErrorHandler(postsCreate));
+router.post("/",isLoggedIn,upload.array("images",4),asyncErrorHandler(postsCreate));
 
 
 /* GET posts Show (/posts/:id) */
 router.get('/:id', asyncErrorHandler(postsShow));
 
 /* GET posts Edit (/posts/:id/edit) */
-router.get('/:id/edit',asyncErrorHandler(postsEdit));
+router.get('/:id/edit',isLoggedIn,
+	isPostAuthor,asyncErrorHandler(postsEdit));
 
 /* PUT posts Update (/posts/:id) */
-router.put("/:id",upload.array("images",4),asyncErrorHandler(postsUpdate));
+router.put("/:id",isLoggedIn,isPostAuthor,
+	upload.array("images",4),asyncErrorHandler(postsUpdate));
 
 /* DELETE posts Destroy(/posts/:id) */
-router.delete("/:id",asyncErrorHandler(postsDelete));
+router.delete("/:id",isLoggedIn,isPostAuthor,asyncErrorHandler(postsDelete));
 
 module.exports=router;

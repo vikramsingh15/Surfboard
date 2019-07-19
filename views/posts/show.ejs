@@ -23,11 +23,14 @@
 
 
 <div id='map'></div>
+<%if(currentUser&&currentUser._id.equals(post.author)){%>
+	<a href="/posts/<%=post.id%>/edit" class="btn btn-primary">Edit</a>
+	<form action="/posts/<%=post.id%>?_method=DELETE" class="d-inline" method="POST">
+			<button class="btn btn-outline-danger">Delete post</button>
+	</form>
+<%}%>
 
-<a href="/posts/<%=post.id%>/edit" class="btn btn-primary">Edit</a>
-<form action="/posts/<%=post.id%>?_method=DELETE" class="d-inline" method="POST">
-		<button class="btn btn-outline-danger">Delete post</button>
-</form>
+<%if(currentUser){%>
 
 <form action="/posts/<%=post.id%>/review" method="POST" class="mt-3">
 	<textarea name="body" class="form-control" col=40 placeholder="Enter review"></textarea>
@@ -50,6 +53,10 @@
 	<button>submit</button>
 </form>
 
+<%}else{%>
+	<a href="/login?referTo=true" >Login to Write review</a>
+<%}%>
+
 <h1 class="mt-5">Reviews</h1>
 
 	<%  post.reviews.forEach((review)=>{%>
@@ -63,12 +70,11 @@
 		<%=review.rating%>
 		<hr>
 
-	<%if(review.author.equals(currentUser._id)){%>
+	<%if(currentUser&&review.author.equals(currentUser._id)){%>
 		<input type="button" value="Edit" class="btn btn-warning toggle">
 		
 		<form  action="/posts/<%=post.id%>/review/<%=review.id%>?_method=PUT" method="POST" class="mt-3 toggle-form">
-			<textarea name="body" class="form-control" col=40 placeholder="Enter review"><%=review.body%>
-			</textarea>
+			<textarea name="body" class="form-control" col=40 placeholder="Enter review"><%=review.body%></textarea>
 
 			<fieldset class="starability-basic">
 			  <legend>Edit rating:</legend>

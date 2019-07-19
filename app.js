@@ -2,9 +2,9 @@ require("dotenv").config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const engine=require("ejs-mate");
-const bodyParser=require("body-parser");
 const logger = require('morgan');
 const passport=require("passport");
 const passportLocal=require("passport-local");
@@ -25,7 +25,10 @@ const app = express();
 
 /*database connect with mongoose*/
 
-mongoose.connect("mongodb://localhost/surfBoard", { useNewUrlParser: true } );
+mongoose.connect("mongodb://localhost/surfBoard", { 
+  useNewUrlParser: true ,
+useCreateIndex:true
+} );
 
 // view engine setup
 mongoose.set('useFindAndModify', false);
@@ -35,22 +38,29 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(methodOverride("_method"));
-app.use(bodyParser.urlencoded({extended:true}));  //bodyparser
+
+app.use(express.urlencoded({extended:true}));  //bodyparser now body parser is in express
+
 app.use(logger('dev'));  
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));   
 app.use(cookieParser());
 app.use(express.static(__dirname+'/public')); //path for public dir
 
+
+
 /*Oauth (before routes)*/
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(session({
   secret: 'Surfboard',
   resave: false,
   saveUninitialized: false
 }))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(User.createStrategy())
 passport.serializeUser(User.serializeUser());
@@ -59,10 +69,10 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
   res.locals.title="Surfboard $";
-  req.user={
+  /*req.user={
           "_id" :"5d24d1efe9bde80dcc324145",
           "username" : "vikram2"
-  }
+  }*/
  /* req.user={
           "_id" :"5d236deaeb45da1ca8f2ae01",
           "username" : "vikram"

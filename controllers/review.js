@@ -9,7 +9,6 @@ module.exports={
 
 		req.body.author=req.user._id;
 		posts = await Posts.findById(req.params.id).populate("reviews").exec();
-		console.log(posts.reviews)
 		const pastReview = posts.reviews.filter(review=>review.author.equals(req.user._id));
 		if(pastReview.length){
 			req.session.error = "cannt have more than one review";

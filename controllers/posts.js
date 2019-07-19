@@ -1,5 +1,6 @@
 const Posts=require("../models/posts.js");
 const mapboxToken=process.env.MAPBOX_TOKEN;
+const Review=require('../models/review.js');
 const {cloudinary}=require("../cloudinary")
 const mbx = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbx({ accessToken: mapboxToken });
@@ -31,8 +32,7 @@ module.exports={
 	/*create new posts*/	
 	postsCreate:async (req,res,next)=>{
 		req.body.images=[];
-		console.log(req.body)
-
+		req.body.author=req.user._id;
 		/*cloudinary new image upload*/
 		for(const file of req.files){
 			req.body.images.push({url:file.secure_url,public_id:file.public_id});
@@ -118,7 +118,7 @@ module.exports={
 		posts.price=req.body.price;	
 		posts.description=req.body.description;	
 		posts.properties.description=`<strong><a href="/posts/${posts._id}">${posts.title}</a></strong><p>${posts.location}</p><p>${posts.description.substring(0, 20)}...</p>`;
-		posts.save();
+		await posts.save();
 		res.redirect("/posts/"+posts.id);
 	},
 
@@ -126,6 +126,7 @@ module.exports={
 
 	async postsDelete(req,res,next){
 		const posts=await Posts.findById(req.params.id);
+
 		for({public_id} of posts.images){
 			await cloudinary.v2.uploader.destroy(public_id);
 		}
@@ -133,3 +134,5 @@ module.exports={
 		res.redirect("/");
 	}
 }
+
+
