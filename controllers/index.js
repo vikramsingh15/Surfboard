@@ -12,8 +12,9 @@ const { postForgotPwMail ,putResetMail}=require('../sendGridMail');
 module.exports={
 
 	async landingPage(req,res,next){
-		posts=await Post.find();
-		res.render("index.ejs",{posts,mapboxToken,title:"surfBoard - home"});
+		posts=await Post.find({}).sort('-_id').exec();
+		recentPosts=posts.splice(0,3);
+		res.render("index.ejs",{recentPosts,mapboxToken,title:"surfBoard - home"});
 	},
 
 	getRegister(req,res,next){
@@ -43,6 +44,9 @@ module.exports={
 			await deleteImage(req);
 			
 			let error=err.message;
+			if (error.includes('E11000')) {
+				error = 'A user with the given email is already registered';
+			}
 			req.session.error=error;
 			return res.render('user/register.ejs',{title:'Register',username,email})
 

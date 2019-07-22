@@ -20,12 +20,15 @@ var map = new mapboxgl.Map({
 
     .addTo(map);
 
-/*toggle form*/
-    const toggle=document.querySelectorAll(".toggle");
-    toggle.forEach((toggle)=>{
-        toggle.addEventListener("click",()=>{
-          toggle.value==="Edit"?toggle.value="Cancel":toggle.value="Edit"
-          toggle.nextElementSibling.classList.toggle("toggle-form")
-        });
-    })
+function getAttr(img){
+  let bigImage=document.querySelector("#bigImage");
+  let smallImage=img.getAttribute("src");
+  bigImage.setAttribute("src",smallImage);
+
+
+}
     
+
+    map.scrollZoom.disable();
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());

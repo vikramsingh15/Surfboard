@@ -8,7 +8,8 @@ const mongoose= require("mongoose"),
 			author:{
 				type:Schema.Types.ObjectId,
 				ref:"User"
-			}
+			},
+			createdAt:{type:Date,defaule:Date.now}
 		})	
 
 

@@ -80,6 +80,7 @@ app.use((req,res,next)=>{
  */ 
   res.locals.query=null;
   res.locals.currentUser=req.user;
+  res.locals.moment=require('moment');
 
   res.locals.success=req.session.success;
   delete req.session.success;

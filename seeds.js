@@ -20,7 +20,7 @@ async function seedPosts() {
 			author:"5d24d1efe9bde80dcc324145",
 			price:random1000,
 			averageRating:random5,
-			images:[{url:faker.random.image()}]
+			images:[{url:faker.random.image()},{url:faker.random.image()}]
 		}
 	
 		let post = new Post(postData);
