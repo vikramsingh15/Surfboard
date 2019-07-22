@@ -1,30 +1,54 @@
 <%layout("/partials/boilerplate")-%>
 
 
-<div id="map"></div>
+<div>
+  <div class="row">
+    <div class="col-md-4"><% include ../partials/searchFilter %> </div>
+    <div class="col-md-8 card p-3">
+      <div id="map"></div>
+    </div>
+  </div>
+</div>
 
 <%posts.docs.forEach((post)=>{%>
-	<h1><%=post.title%></h1>
-	<a href="/posts/<%=post._id%>" class="btn btn-primary">more</a>
-<% })%>
 
+    <div class="card mt-3" >
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img src="<%=post.images[0].url%>" class="card-img" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"> <a href="/posts/<%=post._id%>"><%=post.title%></a> </h5>
+            <p class="card-text"><%=post.description.substring(0,200)%> .....</p>
+            <a href="/posts/<%=post._id%>" class="btn btn-outline-dark">Show More</a>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+<% })%>
+<!-- pagination -->
 
 <nav aria-label="..." class="mt-5 d-flex justify-content-center">
   <ul class="pagination">
   	<%if(posts.page-1){%>
-    <li class="page-item ">
-      <a class="page-link" href="/posts/?page=<%=posts.page-1%>" tabindex="-1" aria-disabled="true">Previous</a>
-    </li>
+      <li class="page-item ">
+        <a class="page-link" href="<%=paginateUrl%><%=posts.page-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+      </li>
     <%}%>
-	<%for(let i=1 ; i<=posts.pages;i++){%>
-    	<li class="page-item" id="page_<%=i%>">
-    		<a class="page-link " href="/posts/?page=<%=i%>"><%=i%></a>
-    	</li>
+    
+    <%if(posts.pages>1&&posts.docs.length){%>
+      	<%for(let i=1 ; i<=posts.pages;i++){%>
+          	<li class="page-item" id="page_<%=i%>">
+          		<a class="page-link " href="<%=paginateUrl%><%=i%>"><%=i%></a>
+          	</li>
+        <%}%>
     <%}%>
 
     <%if(posts.page<posts.pages){%>
 	    <li class="page-item">
-	      <a class="page-link" href="/posts/?page=<%=Number(posts.page)+1%>" tabindex="+1" aria-disabled="true">Next</a>
+	      <a class="page-link" href="<%=paginateUrl%><%=Number(posts.page)+1%>" tabindex="+1" aria-disabled="true">Next</a>
 	    </li>
     <%}%>
   </ul>
@@ -32,15 +56,18 @@
 
 
 <script>
-	const page=document.querySelector("#page_<%=posts.page%>");
-	page.classList.add("active")
-  mapboxgl.accessToken="<%-mapboxToken%>"
+  mapboxgl.accessToken="<%=mapboxToken%>"
   var posts={features:<%-JSON.stringify(posts.docs)%>}
+</script>
+
+<script>
+  const page=document.querySelector("#page_<%=posts.page%>");
+  page.classList.add("active")
 </script>
 
   
   
 
-
+  <script src="/javascripts/post-index.js"></script> 
   <script src="/javascripts/allPostsClusterMap.js"></script>
 

@@ -3,6 +3,11 @@ const Post=require("../models/posts");
 const User=require("../models/user");
 const {cloudinary}=require('../cloudinary');
 
+const mapboxToken=process.env.MAPBOX_TOKEN;
+const mbx = require('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbx({ accessToken: mapboxToken });
+
+
 const middleware={
 	
 	asyncErrorHandler:function(fn){
@@ -78,8 +83,80 @@ const middleware={
 
 		if(req.file) await cloudinary.v2.uploader.destroy(req.file.public_id);
 
+	},
+
+
+	async searchAndFilterPosts(req,res,next){
+		
+		const queryKeys=Object.keys(req.query);
+		
+		if(queryKeys.length){
+			dbQueries=[];
+			let {search,price,avgRating,location,distance}=req.query;
+			
+		if (search) {
+						search = new RegExp(escapeRegExp(search), 'gi');
+						dbQueries.push({ $or: [
+								{ title: search },
+								{ description: search },
+								{ location: search }
+							]
+						});
+					}
+
+		if(location){
+			response=await geocodingClient.forwardGeocode({
+			  query: location,
+			  limit: 1
+			}).send()
+
+			const {coordinates}=response.body.features[0].geometry;
+
+			maxDistance=distance||25;
+			maxDistance*=1000;   /*km->m*/
+			
+			dbQueries.push({
+				geometry:{
+					$near:{
+						$geometry:{
+							type:'Point',
+							coordinates
+						},
+						$maxDistance:maxDistance
+					}
+				}
+			})
+
+		}
+	
+		if(price){
+			if (price.min) dbQueries.push({ price: { $gte: price.min } });
+			if (price.max) dbQueries.push({ price: { $lte: price.max } });
+		}
+		
+		if(avgRating){
+			dbQueries.push({avgRating:{$in:avgRating}})
+		}
+		res.locals.dbQueries=dbQueries.length?{$and:dbQueries}:{};
+
+		}
+
+		
+		res.locals.query = req.query;
+		
+		if(queryKeys.includes('page')) queryKeys.splice(queryKeys.indexOf('page'), 1);
+		
+	
+		const delimiter = queryKeys.length ? '&' : '?';
+		res.locals.paginateUrl = req.originalUrl.replace(/(\?|\&)page=\d+/g, '') + `${delimiter}page=`;
+
+		next();
 	}
 }
 
+
+function escapeRegExp(str){
+		return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');	
+}
 
 module.exports=middleware;

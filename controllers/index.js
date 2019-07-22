@@ -173,10 +173,10 @@ module.exports={
 			return res.redirect('back');
 		}
 
-	await putResetMail(user.email);
+		await putResetMail(user.email);   /*send mail*/
 
-	  req.session.success='Password updated successfully !!'
-	  res.redirect('/');
+		req.session.success='Password updated successfully !!'
+		res.redirect('/');
 	}
 
 }

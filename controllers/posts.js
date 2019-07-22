@@ -10,12 +10,17 @@ const geocodingClient = mbx({ accessToken: mapboxToken });
 module.exports={
 /*	index of posts*/
 	postsIndex:async (req,res,next)=>{
-		/*	posts=await Posts.find({});*/
-			let posts =await Posts.paginate({},{
+			const { dbQueries }=res.locals;
+			delete res.locals.dbQueries;
+			
+			let posts =await Posts.paginate(dbQueries,{
 				page:req.query.page||1,
 				limit:10,
 				sort:"-_id"
 			})
+			posts.page = Number(posts.page);
+
+			if(!posts.docs.length&&res.locals.query) res.locals.error="No result found !!"
 
 			res.render("posts/index.ejs",{
 				posts,
@@ -68,6 +73,7 @@ module.exports={
 		});
 
 		floorRating=post.averageRating();
+	
 		
 		res.render("posts/show.ejs",{
 			post,

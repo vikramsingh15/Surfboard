@@ -11,11 +11,11 @@ const {
 	postsUpdate,
 	postsDelete	
 	}=require("../controllers/posts.js");
-const {asyncErrorHandler,isLoggedIn,isPostAuthor}=require("../middleware")
+const {asyncErrorHandler,isLoggedIn,isPostAuthor,searchAndFilterPosts}=require("../middleware")
 
 
 /* GET posts Index (/posts)*/
-router.get('/', asyncErrorHandler(postsIndex));
+router.get('/',asyncErrorHandler(searchAndFilterPosts), asyncErrorHandler(postsIndex));
 
 /* GET posts New (/posts/new) */
 router.get('/new',isLoggedIn,postsNew);

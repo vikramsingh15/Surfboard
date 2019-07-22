@@ -56,6 +56,8 @@ postSchema.pre('remove',async function(){
 })
 postSchema.plugin(mongoosePaginate);
 
+postSchema.index({geometry:'2dsphere'});
+
 postSchema.methods.averageRating = function(){
 	let floorRating=0;
 	if(this.reviews.length){

@@ -78,7 +78,7 @@ app.use((req,res,next)=>{
           "username" : "vikram"
   }
  */ 
-
+  res.locals.query=null;
   res.locals.currentUser=req.user;
 
   res.locals.success=req.session.success;
@@ -96,23 +96,19 @@ app.use('/', indexRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/review', reviewRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  /*res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};*/
+  // // set locals, only providing error in development
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  /*res.status(err.status || 500);
-  res.render('error.ejs');*/
-  req.session.error=err.message;
+  // // render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
   console.log(err);
-  res.redirect("back");
+  req.session.error = err.message;
+  res.redirect('back');
 });
 
 module.exports = app;
