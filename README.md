@@ -38,6 +38,18 @@ In this website i have built a production ready RESTful CRUD application that ha
 
 - And much more!
 
+###Overview of website
+
+## Add New Surfboard 
+
+Can Add new surfboard after sign up.(CRUD operation included)
+
+
+## Reviews (Basic CRUD operation included)
+Logged in Users can comment on the Surfboard and RATING FEATURE AVAILABLE.
+
+## Average Rating of Surboard calculated from reviews rating
+
 
 ### Stack used in website
 
