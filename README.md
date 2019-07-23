@@ -30,6 +30,8 @@ In this website i have built a production ready RESTful CRUD application that ha
 
 - Background jobs
 
+- Edit Profile (password username and more)
+
 - Password reset
 
 - Deployment and security
