@@ -15,7 +15,7 @@
     "ejs": "~2.6.1",
     "ejs-mate": "^3.0.0",
     "env": "0.0.2",
-    "express": "~4.16.1",
+    "express": "~4.17.3",
     "express-session": "^1.16.2",
     "faker": "^4.1.0",
     "http-errors": "~1.6.3",
